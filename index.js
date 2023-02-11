@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import express from "express";
+import {CategoriesController} from "./controllers/index.js";
 // import multer from 'multer'
 
 mongoose
     .connect(
-        'mongodb+srv://admin:iiiiii@cluster0.0sk2qea.mongodb.net/blog?retryWrites=true&w=majority'
+        'mongodb+srv://admin:wwwwww@td-market.zlmpc.mongodb.net/?retryWrites=true&w=majority'
     )
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err))
@@ -25,6 +26,8 @@ const app = express()
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
+app.get('/categories', CategoriesController.getCategories)
+
 // app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login)
 // app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
 // app.get('/auth/me', checkAuth, UserController.getMe)
@@ -41,7 +44,9 @@ app.use('/uploads', express.static('uploads'))
 // app.delete('/posts/:id', checkAuth, PostController.remove)
 // app.post('/posts', checkAuth, postCreateValidation, PostController.create)
 
-app.listen(4444, (err) => {
+const PORT = process.env.PORT || 3001
+
+app.listen(PORT, (err) => {
     if (err) {
         return console.log(err)
     }
