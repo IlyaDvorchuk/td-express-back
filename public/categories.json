@@ -1,6 +1,7 @@
 [
   {
     "name": "Электроника",
+    "icon": "http://localhost:3001/uploads/headphones.svg",
     "subcategories": [
       {
         "name": "Смартфоны и телефоны",

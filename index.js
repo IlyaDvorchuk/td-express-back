@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import express from "express";
 import {CategoriesController} from "./controllers/index.js";
 import cors from "cors"
-// import multer from 'multer'
+import multer from 'multer'
 
 mongoose
     .connect(
@@ -13,16 +13,16 @@ mongoose
 
 const app = express()
 
-// const storage = multer.diskStorage({
-//     destination: (_, __, cb) => {
-//         cb(null, 'uploads')
-//     },
-//     filename: (_, file, cb) => {
-//         cb(null, file.originalname)
-//     }
-// })
+const storage = multer.diskStorage({
+    destination: (_, __, cb) => {
+        cb(null, 'uploads')
+    },
+    filename: (_, file, cb) => {
+        cb(null, file.originalname)
+    }
+})
 
-// const upload = multer({storage})
+const upload = multer({storage})
 
 app.use(cors())
 app.use(express.json())
