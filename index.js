@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import express from "express";
 import {CategoriesController} from "./controllers/index.js";
+import cors from "cors"
 // import multer from 'multer'
 
 mongoose
@@ -23,6 +24,7 @@ const app = express()
 
 // const upload = multer({storage})
 
+app.use(cors())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
