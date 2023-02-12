@@ -3,6 +3,8 @@ import express from "express";
 import {CategoriesController} from "./controllers/index.js";
 import cors from "cors"
 import multer from 'multer'
+import {registerValidation} from "./validations.js";
+import handleValidationErrors from "./utils/handleValidationErrors.js";
 
 mongoose
     .connect(
@@ -22,7 +24,7 @@ const storage = multer.diskStorage({
     }
 })
 
-const upload = multer({storage})
+// const upload = multer({storage})
 
 app.use(cors())
 app.use(express.json())
@@ -31,7 +33,7 @@ app.use('/uploads', express.static('uploads'))
 app.get('/categories', CategoriesController.getCategories)
 
 // app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login)
-// app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
+app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
 // app.get('/auth/me', checkAuth, UserController.getMe)
 //
 // app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
