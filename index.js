@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import express from "express";
-import {CategoriesController} from "./controllers/index.js";
+import {CategoriesController, UserController} from "./controllers/index.js";
 import cors from "cors"
 import multer from 'multer'
 import {registerValidation} from "./validations.js";

@@ -1,4 +1,6 @@
 import bcrypt from "bcrypt";
+import UserModel from '../models/User.js'
+import jwt from 'jsonwebtoken'
 
 export const register = async (req, res) => {
     try {
@@ -8,8 +10,8 @@ export const register = async (req, res) => {
 
         const doc = new UserModel({
             email: req.body.email,
-            fullName: req.body.fullName,
-            avatarUrl: req.body.avatarUrl,
+            firstName: req.body.firstName,
+            secondName: req.body.secondName,
             passwordHash: hash
         })
 
