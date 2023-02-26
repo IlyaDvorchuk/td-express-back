@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
 import express from "express";
-import {CategoriesController, UserController} from "./controllers/index.js";
+import {CategoriesController} from "./controllers/index.js";
 import cors from "cors"
-import multer from 'multer'
-import {registerValidation} from "./validations.js";
-import handleValidationErrors from "./utils/handleValidationErrors.js";
+// import multer from 'multer'
+// import {registerValidation} from "./validations.js";
+// import handleValidationErrors from "./utils/handleValidationErrors.js";
+import {router as authRouter} from './routers/authRouter.js'
 
 mongoose
     .connect(
@@ -15,14 +16,14 @@ mongoose
 
 const app = express()
 
-const storage = multer.diskStorage({
-    destination: (_, __, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (_, file, cb) => {
-        cb(null, file.originalname)
-    }
-})
+// const storage = multer.diskStorage({
+//     destination: (_, __, cb) => {
+//         cb(null, 'uploads')
+//     },
+//     filename: (_, file, cb) => {
+//         cb(null, file.originalname)
+//     }
+// })
 
 // const upload = multer({storage})
 
@@ -32,8 +33,10 @@ app.use('/uploads', express.static('uploads'))
 
 app.get('/categories', CategoriesController.getCategories)
 
+app.use('/auth', authRouter)
+
 // app.post('/auth/login', loginValidation, handleValidationErrors, UserController.login)
-app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
+// app.post('/auth/register', registerValidation, handleValidationErrors, UserController.register)
 // app.get('/auth/me', checkAuth, UserController.getMe)
 //
 // app.post('/upload', checkAuth, upload.single('image'), (req, res) => {

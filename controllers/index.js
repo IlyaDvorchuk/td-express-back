@@ -3,5 +3,5 @@ import * as UserController from './UserController.js'
 
 export {
     CategoriesController,
-     UserController,
+    UserController,
 }
