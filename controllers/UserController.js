@@ -2,7 +2,7 @@ import bcrypt from "bcrypt";
 import UserModel from '../models/User.js'
 import RoleModel from '../models/Role.js'
 import jwt from 'jsonwebtoken'
-import config from 'config.js'
+import config from '../config.js'
 
 export const register = async (req, res) => {
     try {
@@ -97,8 +97,8 @@ export const login = async (req, res) => {
 
 export const getUsers = async (req, res) => {
     try {
-
-        res.json('server work')
+        const users = await UserModel.find()
+        res.json(users)
     } catch (e) {
         console.log(e)
         res.status(500).json({
