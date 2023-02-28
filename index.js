@@ -2,14 +2,21 @@ import mongoose from "mongoose";
 import express from "express";
 import {CategoriesController} from "./controllers/index.js";
 import cors from "cors"
+import * as dotenv from 'dotenv'
+import {router as authRouter} from './routers/authRouter.js'
+import cookieParser from 'cookie-parser'
 // import multer from 'multer'
 // import {registerValidation} from "./validations.js";
 // import handleValidationErrors from "./utils/handleValidationErrors.js";
-import {router as authRouter} from './routers/authRouter.js'
+
+dotenv.config()
+
+// mongoose.set('useNewUrlParser', true)
+// mongoose.set('useUnifiedTopology', true);
 
 mongoose
     .connect(
-        'mongodb+srv://admin:wwwwww@td-market.zlmpc.mongodb.net/?retryWrites=true&w=majority'
+        process.env.DB_URL, {}
     )
     .then(() => console.log('DB ok'))
     .catch((err) => console.log('DB error', err))
@@ -28,6 +35,7 @@ const app = express()
 // const upload = multer({storage})
 
 app.use(cors())
+app.use(cookieParser())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 
@@ -51,7 +59,7 @@ app.use('/auth', authRouter)
 // app.delete('/posts/:id', checkAuth, PostController.remove)
 // app.post('/posts', checkAuth, postCreateValidation, PostController.create)
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 5000
 
 app.listen(PORT, (err) => {
     if (err) {

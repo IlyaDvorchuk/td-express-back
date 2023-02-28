@@ -24,7 +24,14 @@ const UserSchema = new mongoose.Schema({
             ref: 'Role',
             required: true
         }
-    ]
+    ],
+    isActivated: {
+        type: Boolean,
+        default: false
+    },
+    activationLink: {
+        type: String
+    }
 }, {
     timestamps: true,
 })
