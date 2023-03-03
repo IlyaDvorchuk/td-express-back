@@ -1,49 +1,15 @@
 import bcrypt from "bcrypt";
 import UserModel from '../models/User.js'
-import RoleModel from '../models/Role.js'
 import jwt from 'jsonwebtoken'
 import config from '../config.js'
+import {UserService} from "../service/user-service.js";
 
 export const register = async (req, res) => {
     try {
-        const {password, email} = req.body
-
-        const candidate = await UserModel.findOne({email})
-
-        if (candidate) {
-            return res.status(400).json({message: 'Пользователь с таким именем уже существует'})
-        }
-
-        const salt = await bcrypt.genSalt(10)
-        const hash = await bcrypt.hash(password, salt)
-        const userRole = await RoleModel.findOne({value: "CUSTOMER"})
-
-        const doc = new UserModel({
-            email: req.body.email,
-            firstName: req.body.firstName,
-            secondName: req.body.secondName,
-            passwordHash: hash,
-            role: [userRole.value]
-        })
-
-        const user = await doc.save()
-
-        const token = jwt.sign(
-            {
-                id: user._id
-            },
-            config.secret,
-            {
-                expiresIn: '24h',
-            }
-        )
-
-        const {passwordHash, ...userData} = user._doc
-
-        res.json({
-            userData,
-            token,
-        })
+        const userData = await UserService.registration(req.body)
+        res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+        return res.json(userData)
+        // TODO if will https - add secure: true
     } catch (err) {
         console.log(err)
         res.status(500).json({

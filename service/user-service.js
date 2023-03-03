@@ -1,14 +1,14 @@
 import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
 import RoleModel from "../models/Role.js";
-import jwt from "jsonwebtoken";
-import config from "../config.js";
-import uuid from 'uuid'
+import {v4} from 'uuid'
 import mailService from "./mail-service.js";
+import tokenService from "./token-service.js";
+import {UserDto} from "../dtos/user-dto.js";
 
-export default class UserService {
+export class UserService {
     static async registration(userData) {
-        const {password, email} = userData;д
+        const {password, email} = userData;
 
         const candidate = await UserModel.findOne({email})
 
@@ -18,7 +18,7 @@ export default class UserService {
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
-        const activationLink = uuid.v4()
+        const activationLink = v4()
         const userRole = await RoleModel.findOne({value: "CUSTOMER"})
 
         const user = await UserModel.create({
@@ -32,21 +32,10 @@ export default class UserService {
 
         await mailService.sendActivationMail(email, activationLink)
 
-        const token = jwt.sign(
-            {
-                id: user._id
-            },
-            config.secret,
-            {
-                expiresIn: '24h',
-            }
-        )
+        const userDto = new UserDto(user)
+        const tokens = tokenService.generateTokens({...userDto})
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
-        const {passwordHash, ...userData} = user._doc
-
-        res.json({
-            userData,
-            token,
-        })
+        return {...tokens, user: userDto}
     }
 }

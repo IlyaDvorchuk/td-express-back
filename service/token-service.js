@@ -24,8 +24,12 @@ export default class TokenService {
         }
     };
 
-    async static saveToken(userId, refreshToken) {
+    static async saveToken(userId, refreshToken) {
         const tokenData = await TokenModel.findOne({user: userId})
-
+        if (tokenData) {
+            tokenData.refreshToken = refreshToken
+            return tokenData.save()
+        }
+        return await TokenModel.create({user: userId, refreshToken})
     }
 }

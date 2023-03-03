@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const UserSchema = new mongoose.Schema({
+const TokenSchema = new mongoose.Schema({
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
@@ -13,4 +13,4 @@ const UserSchema = new mongoose.Schema({
     timestamps: true,
 })
 
-export default mongoose.model('User', UserSchema)
+export default mongoose.model('Token', TokenSchema)
