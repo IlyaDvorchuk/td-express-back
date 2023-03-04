@@ -5,6 +5,7 @@ import {v4} from 'uuid'
 import {MailService} from "./mail-service.js";
 import tokenService from "./token-service.js";
 import {UserDto} from "../dtos/user-dto.js";
+import {ApiError} from "../exceptions/api-error.js";
 
 export class UserService {
     static async registration(userData) {
@@ -13,7 +14,7 @@ export class UserService {
         const candidate = await UserModel.findOne({email})
 
         if (candidate) {
-            throw new Error(`Пользователь с почтовым адрессом ${email} уже существует`)
+            throw ApiError.BadRequest(`Пользователь с почтовым адрессом ${email} уже существует`)
         }
 
         const salt = await bcrypt.genSalt(10)
@@ -37,5 +38,14 @@ export class UserService {
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
         return {...tokens, user: userDto}
+    }
+
+    static async activate(activationLink) {
+        const user = await UserModel.findOne({activationLink})
+        if (!user) {
+            throw ApiError.BadRequest('Некорректная ссылка активации')
+        }
+        user.isActivated = true
+        await user.save()
     }
 }

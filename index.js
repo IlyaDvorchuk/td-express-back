@@ -5,6 +5,7 @@ import cors from "cors"
 import * as dotenv from 'dotenv'
 import {router as authRouter} from './routers/authRouter.js'
 import cookieParser from 'cookie-parser'
+import errorMiddleware from "./middlewares/errorMiddleware.js";
 // import multer from 'multer'
 // import {registerValidation} from "./validations.js";
 // import handleValidationErrors from "./utils/handleValidationErrors.js";
@@ -38,6 +39,7 @@ app.use(cors())
 app.use(cookieParser())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
+app.use(errorMiddleware)
 
 app.get('/categories', CategoriesController.getCategories)
 

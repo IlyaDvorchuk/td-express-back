@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import config from '../config.js'
 import {UserService} from "../service/user-service.js";
 
-export const register = async (req, res) => {
+export const register = async (req, res, next) => {
     try {
         const userData = await UserService.registration(req.body)
         res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
@@ -12,13 +12,11 @@ export const register = async (req, res) => {
         // TODO if will https - add secure: true
     } catch (err) {
         console.log(err)
-        res.status(500).json({
-            message: 'Не удалось зарегистрироваться',
-        })
+        next(err)
     }
 }
 
-export const login = async (req, res) => {
+export const login = async (req, res, next) => {
     try {
         const user = await UserModel.findOne({email: req.body.email})
 
@@ -55,20 +53,27 @@ export const login = async (req, res) => {
         })
     } catch (err) {
         console.log(err)
-        res.status(500).json({
-            message: 'Не удалось авторизоваться',
-        })
+        next(err)
     }
 }
 
-export const getUsers = async (req, res) => {
+export const activate = async (req, res, next) => {
+    try {
+        const activationLink = req.params.link
+        await UserService.activate(activationLink)
+        return res.redirect(process.env.CLIENT_URL)
+    } catch (err) {
+        console.log(err)
+        next(err)
+    }
+}
+
+export const getUsers = async (req, res, next) => {
     try {
         const users = await UserModel.find()
         res.json(users)
-    } catch (e) {
-        console.log(e)
-        res.status(500).json({
-            message: 'Не удалось отправить данные',
-        })
+    } catch (err) {
+        console.log(err)
+        next(err)
     }
 }
