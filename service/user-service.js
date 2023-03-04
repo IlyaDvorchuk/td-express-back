@@ -40,6 +40,27 @@ export class UserService {
         return {...tokens, user: userDto}
     }
 
+    static async login(email, password) {
+        const user = await UserModel.findOne({email})
+
+        if (!user) {
+            throw ApiError.BadRequest('Пользователь с таким email не найден')
+        }
+
+        const isValidPass = await bcrypt.compare(password, user.passwordHash)
+
+        if (!isValidPass) {
+            throw ApiError.BadRequest('Неверный пароль')
+        }
+
+        const userDto = new UserDto(user)
+
+        const tokens = tokenService.generateTokens({...userDto})
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+        return {...tokens, user: userDto}
+    }
+
     static async activate(activationLink) {
         const user = await UserModel.findOne({activationLink})
         if (!user) {
