@@ -2,7 +2,7 @@ import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
 import RoleModel from "../models/Role.js";
 import {v4} from 'uuid'
-import mailService from "./mail-service.js";
+import {MailService} from "./mail-service.js";
 import tokenService from "./token-service.js";
 import {UserDto} from "../dtos/user-dto.js";
 
@@ -30,7 +30,7 @@ export class UserService {
             activationLink
         })
 
-        await mailService.sendActivationMail(email, activationLink)
+        await new MailService().sendActivationMail(email, `${process.env.API_URL}/auth/activate/${activationLink}`)
 
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
