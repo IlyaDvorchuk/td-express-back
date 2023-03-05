@@ -4,9 +4,9 @@ import RoleModel from "../models/Role.js";
 import {v4} from 'uuid'
 import {MailService} from "./mail-service.js";
 import tokenService from "./token-service.js";
+import TokenService from "./token-service.js";
 import {UserDto} from "../dtos/user-dto.js";
 import {ApiError} from "../exceptions/api-error.js";
-import TokenService from "./token-service.js";
 
 export class UserService {
     static async registration(userData) {
@@ -91,6 +91,9 @@ export class UserService {
         await tokenService.saveToken(userDto.id, tokens.refreshToken)
 
         return {...tokens, user: userDto}
+    }
 
+    static async getAllUsers() {
+        return await UserModel.find()
     }
 }

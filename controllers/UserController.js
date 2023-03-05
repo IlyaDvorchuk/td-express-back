@@ -1,4 +1,3 @@
-import UserModel from '../models/User.js'
 import {UserService} from "../service/user-service.js";
 
 export const register = async (req, res, next) => {
@@ -63,8 +62,8 @@ export const refresh =  async (req, res, next) => {
 
 export const getUsers = async (req, res, next) => {
     try {
-        const users = await UserModel.find()
-        res.json(users)
+        const users = await UserService.getAllUsers()
+        return res.json(users)
     } catch (err) {
         console.log(err)
         next(err)
