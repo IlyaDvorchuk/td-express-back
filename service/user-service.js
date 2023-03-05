@@ -69,4 +69,8 @@ export class UserService {
         user.isActivated = true
         await user.save()
     }
+
+    static async logout(refreshToken) {
+        return await tokenService.removeToken(refreshToken)
+    }
 }

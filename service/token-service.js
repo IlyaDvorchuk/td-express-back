@@ -32,4 +32,8 @@ export default class TokenService {
         }
         return await TokenModel.create({user: userId, refreshToken})
     }
+
+    static async removeToken(refreshToken) {
+        return await TokenModel.deleteOne({refreshToken})
+    }
 }

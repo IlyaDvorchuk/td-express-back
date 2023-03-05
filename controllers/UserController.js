@@ -26,6 +26,18 @@ export const login = async (req, res, next) => {
     }
 }
 
+export const logout = async (req, res, next) => {
+    try {
+        const {refreshToken} = req.cookies
+        const token = await UserService.logout(refreshToken)
+        res.clearCookie('refreshToken')
+        return res.json(token)
+    } catch (e) {
+        console.log(e)
+        next(e)
+    }
+}
+
 export const activate = async (req, res, next) => {
     try {
         const activationLink = req.params.link
