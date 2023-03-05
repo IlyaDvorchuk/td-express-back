@@ -6,6 +6,7 @@ import {MailService} from "./mail-service.js";
 import tokenService from "./token-service.js";
 import {UserDto} from "../dtos/user-dto.js";
 import {ApiError} from "../exceptions/api-error.js";
+import TokenService from "./token-service.js";
 
 export class UserService {
     static async registration(userData) {
@@ -72,5 +73,24 @@ export class UserService {
 
     static async logout(refreshToken) {
         return await tokenService.removeToken(refreshToken)
+    }
+
+    static async refresh(refreshToken) {
+        if (!refreshToken) {
+            throw ApiError.UnauthorizedError()
+        }
+        const userData = tokenService.validateRefreshToken(refreshToken)
+        const tokenFromDb = await TokenService.findToken(refreshToken)
+        if (!userData || !tokenFromDb) {
+            throw ApiError.UnauthorizedError()
+        }
+        const user = await UserModel.findById(userData.id)
+        const userDto = new UserDto(user)
+
+        const tokens = tokenService.generateTokens({...userDto})
+        await tokenService.saveToken(userDto.id, tokens.refreshToken)
+
+        return {...tokens, user: userDto}
+
     }
 }

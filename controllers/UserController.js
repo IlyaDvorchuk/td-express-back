@@ -49,6 +49,18 @@ export const activate = async (req, res, next) => {
     }
 }
 
+export const refresh =  async (req, res, next) => {
+    try {
+        const {refreshToken} = req.cookies
+        const userData = await UserService.refresh(refreshToken)
+        res.cookie('refreshToken', userData.refreshToken, {maxAge: 30 * 24 * 60 * 60 * 1000, httpOnly: true})
+        return res.json(userData)
+    } catch (err) {
+        console.log(err)
+        next(err)
+    }
+}
+
 export const getUsers = async (req, res, next) => {
     try {
         const users = await UserModel.find()

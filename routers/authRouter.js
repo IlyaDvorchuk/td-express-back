@@ -10,5 +10,5 @@ router.post('/register', registerValidation, handleValidationErrors, UserControl
 router.post('/login', loginValidation, handleValidationErrors, UserController.login)
 router.post('/logout', handleValidationErrors, UserController.logout)
 router.get('/activate/:link', handleValidationErrors, UserController.activate)
-router.get('/refresh')
+router.get('/refresh', handleValidationErrors, UserController.refresh)
 router.get('/users', handleValidationErrors, roleMiddleware(['CUSTOMER']), UserController.getUsers)
