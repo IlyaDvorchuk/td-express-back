@@ -39,8 +39,8 @@ export const logout = async (req, res, next) => {
 
 export const activate = async (req, res, next) => {
     try {
-        const activationLink = req.params.link
-        await UserService.activate(activationLink)
+        const {email, code} = req.body
+        await UserService.activate(email, code)
         return res.redirect(process.env.CLIENT_URL)
     } catch (err) {
         console.log(err)

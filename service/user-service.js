@@ -1,7 +1,6 @@
 import UserModel from "../models/User.js";
 import bcrypt from "bcrypt";
 import RoleModel from "../models/Role.js";
-import {v4} from 'uuid'
 import {MailService} from "./mail-service.js";
 import tokenService from "./token-service.js";
 import TokenService from "./token-service.js";
@@ -20,7 +19,7 @@ export class UserService {
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
-        const activationLink = v4()
+        const randomCode = Math.random().toString().slice(-6)
         const userRole = await RoleModel.findOne({value: "CUSTOMER"})
 
         const user = await UserModel.create({
@@ -29,10 +28,10 @@ export class UserService {
             secondName: userData.secondName,
             passwordHash: hash,
             role: [userRole.value],
-            activationLink
+            randomCode,
         })
 
-        await new MailService().sendActivationMail(email, `${process.env.API_URL}/auth/activate/${activationLink}`)
+        await new MailService().sendActivationMail(email, randomCode)
 
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
@@ -62,12 +61,16 @@ export class UserService {
         return {...tokens, user: userDto}
     }
 
-    static async activate(activationLink) {
-        const user = await UserModel.findOne({activationLink})
+    static async activate(email, code) {
+        const user = await UserModel.findOne({email})
         if (!user) {
             throw ApiError.BadRequest('Некорректная ссылка активации')
         }
-        user.isActivated = true
+
+        if (code === user.randomCode) {
+            user.isActivated = true
+
+        }
         await user.save()
     }
 

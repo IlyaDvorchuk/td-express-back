@@ -10,10 +10,10 @@ export class MailService {
                 user: process.env.SMTP_USER,
                 pass: process.env.SMTP_PASSWORD,
             }
-        })
+        });
     }
 
-    async sendActivationMail(to, link) {
+    async sendActivationMail(to, randomCode) {
         await this.transporter.sendMail({
             from: process.env.SMTP_USER,
             to,
@@ -21,8 +21,8 @@ export class MailService {
             text: '',
             html: `
                 <div>
-                    <h1>Для активации перейдите по ссылке</h1>
-                    <a href="${link}">${link}</a>
+                    <h1>Веддите данный код для активации своего аккаунта</h1>
+                    <h2>${randomCode}</h2>
                 </div>
             `
         })
