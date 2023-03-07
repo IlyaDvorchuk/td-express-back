@@ -25,10 +25,6 @@ const UserSchema = new mongoose.Schema({
             required: true
         }
     ],
-    isActivated: {
-        type: Boolean,
-        default: false
-    },
     randomCode: {
         type: String
     }

@@ -19,7 +19,7 @@ export class UserService {
 
         const salt = await bcrypt.genSalt(10)
         const hash = await bcrypt.hash(password, salt)
-        const randomCode = Math.random().toString().slice(-6)
+
         const userRole = await RoleModel.findOne({value: "CUSTOMER"})
 
         const user = await UserModel.create({
@@ -28,10 +28,8 @@ export class UserService {
             secondName: userData.secondName,
             passwordHash: hash,
             role: [userRole.value],
-            randomCode,
         })
 
-        await new MailService().sendActivationMail(email, randomCode)
 
         const userDto = new UserDto(user)
         const tokens = tokenService.generateTokens({...userDto})
@@ -61,17 +59,10 @@ export class UserService {
         return {...tokens, user: userDto}
     }
 
-    static async activate(email, code) {
-        const user = await UserModel.findOne({email})
-        if (!user) {
-            throw ApiError.BadRequest('Некорректная ссылка активации')
-        }
-
-        if (code === user.randomCode) {
-            user.isActivated = true
-
-        }
-        await user.save()
+    static async activate(email) {
+        const randomCode = Math.random().toString().slice(-6)
+        await new MailService().sendActivationMail(email, randomCode)
+        return randomCode
     }
 
     static async logout(refreshToken) {

@@ -4,12 +4,15 @@ import handleValidationErrors from "../utils/handleValidationErrors.js";
 import {UserController} from "../controllers/index.js";
 import roleMiddleware from "../middlewares/roleMiddleware.js";
 import authMiddleWare from "../middlewares/authMiddleware.js";
+import {body} from "express-validator";
 
 export const router = new Router()
 
 router.post('/register', registerValidation, handleValidationErrors, UserController.register)
 router.post('/login', loginValidation, handleValidationErrors, UserController.login)
 router.post('/logout', handleValidationErrors, UserController.logout)
-router.get('/activate/', handleValidationErrors, UserController.activate)
+router.post('/activate/',
+    body('email', 'Неверный формат почты').isEmail(),
+    handleValidationErrors, UserController.activate)
 router.get('/refresh', handleValidationErrors, authMiddleWare, UserController.refresh)
 router.get('/users', handleValidationErrors, roleMiddleware(['CUSTOMER']), UserController.getUsers)
