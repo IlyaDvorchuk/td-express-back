@@ -1,7 +1,7 @@
 [
   {
     "name": "Электроника",
-    "icon": "http://localhost:3001/uploads/headphones.svg",
+    "icon": "http://localhost:5000/uploads/headphones.svg",
     "subcategories": [
       {
         "name": "Смартфоны и телефоны",
@@ -20,7 +20,7 @@
   },
   {
     "name": "Одежда",
-    "icon": "http://localhost:3001/uploads/icon_pants.svg",
+    "icon": "http://localhost:5000/uploads/icon_pants.svg",
     "subcategories": [
       {
         "name": "Женская одежда",

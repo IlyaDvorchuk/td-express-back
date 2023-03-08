@@ -36,14 +36,13 @@ const app = express()
 // const upload = multer({storage})
 
 app.use(cors({
-    credentials: true,
-    origin: process.env.CLIENT_URL
+    origin: process.env.CLIENT_URL,
+    credentials: true
 }))
 app.use(cookieParser())
 app.use(express.json())
 app.use('/uploads', express.static('uploads'))
 app.use(errorMiddleware)
-
 app.get('/categories', CategoriesController.getCategories)
 
 app.use('/auth', authRouter)
