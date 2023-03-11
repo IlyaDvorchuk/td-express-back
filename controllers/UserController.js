@@ -48,6 +48,17 @@ export const activate = async (req, res, next) => {
     }
 }
 
+export const checkEmail = async (req, res, next) => {
+    try {
+        const {email} = req.body
+        const isCheckEmail = await UserService.checkEmail(email)
+        return res.send(isCheckEmail)
+    } catch (e) {
+        console.log(e)
+        next(e)
+    }
+}
+
 export const refresh =  async (req, res, next) => {
     try {
         const {refreshToken} = req.cookies

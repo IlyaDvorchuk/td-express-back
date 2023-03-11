@@ -65,6 +65,11 @@ export class UserService {
         return randomCode
     }
 
+    static async checkEmail(email) {
+        const user = await UserModel.findOne({email})
+        return !!user
+    }
+
     static async logout(refreshToken) {
         return await tokenService.removeToken(refreshToken)
     }

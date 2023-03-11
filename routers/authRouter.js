@@ -14,5 +14,9 @@ router.post('/logout', handleValidationErrors, UserController.logout)
 router.post('/activate/',
     body('email', 'Неверный формат почты').isEmail(),
     handleValidationErrors, UserController.activate)
+router.post('/check/',
+    body('email', 'Неверный формат почты').isEmail(),
+    handleValidationErrors, UserController.checkEmail
+    )
 router.get('/refresh', handleValidationErrors, authMiddleWare, UserController.refresh)
 router.get('/users', handleValidationErrors, roleMiddleware(['CUSTOMER']), UserController.getUsers)
